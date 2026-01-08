@@ -1,0 +1,112 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: rgb(var(--background));
+  --color-foreground: rgb(var(--foreground));
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-ring: rgb(var(--ring));
+  --color-input: rgb(var(--input));
+  --color-border: rgb(var(--border));
+  --color-destructive: rgb(var(--destructive));
+  --color-accent-foreground: rgb(var(--accent-foreground));
+  --color-accent: rgb(var(--accent));
+  --color-muted-foreground: rgb(var(--muted-foreground));
+  --color-muted: rgb(var(--muted));
+  --color-secondary-foreground: rgb(var(--secondary-foreground));
+  --color-secondary: rgb(var(--secondary));
+  --color-primary-foreground: rgb(var(--primary-foreground));
+  --color-primary: rgb(var(--primary));
+  --color-popover-foreground: rgb(var(--popover-foreground));
+  --color-popover: rgb(var(--popover));
+  --color-card-foreground: rgb(var(--card-foreground));
+  --color-card: rgb(var(--card));
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: 15 18 24;
+  --foreground: 255 255 255;
+  --card: 26 31 46;
+  --card-foreground: 255 255 255;
+  --popover: 26 31 46;
+  --popover-foreground: 255 255 255;
+  --primary: 22 163 74;
+  --primary-foreground: 255 255 255;
+  --secondary: 31 41 55;
+  --secondary-foreground: 255 255 255;
+  --muted: 31 41 55;
+  --muted-foreground: 156 163 175;
+  --accent: 31 41 55;
+  --accent-foreground: 255 255 255;
+  --destructive: 239 68 68;
+  --border: 45 55 72;
+  --input: 45 55 72;
+  --ring: 156 163 175;
+}
+
+.dark {
+  --background: 15 18 24;
+  --foreground: 255 255 255;
+  --card: 26 31 46;
+  --card-foreground: 255 255 255;
+  --popover: 26 31 46;
+  --popover-foreground: 255 255 255;
+  --primary: 22 163 74;
+  --primary-foreground: 255 255 255;
+  --secondary: 31 41 55;
+  --secondary-foreground: 255 255 255;
+  --muted: 31 41 55;
+  --muted-foreground: 156 163 175;
+  --accent: 31 41 55;
+  --accent-foreground: 255 255 255;
+  --destructive: 239 68 68;
+  --border: 45 55 72;
+  --input: 45 55 72;
+  --ring: 156 163 175;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Cursor pointer untuk semua elemen interaktif */
+  button,
+  a,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  label[for],
+  select {
+    cursor: pointer !important;
+  }
+}
+
+@keyframes spotlight {
+  0% {
+    opacity: 0;
+    transform: translate(-72%, -62%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%,-40%) scale(1);
+  }
+}
+
+.animate-spotlight {
+  animation: spotlight 2s ease 0.75s 1 forwards;
+}
