@@ -1,136 +1,150 @@
-"use client"
+'use client';
 
-import { motion } from "framer-motion"
-import { useState } from "react"
-import { Card } from "@/components/ui/card"
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { Card } from '@/components/ui/card';
 
 interface EndpointDetailProps {
-  endpointId: string
-  onMenuClick: () => void
+  endpointId: string;
+  onMenuClick: () => void;
 }
 
 interface Parameter {
-  name: string
-  type: string
-  required: boolean
-  default?: string
-  description: string
+  name: string;
+  type: string;
+  required: boolean;
+  default?: string;
+  description: string;
 }
 
 interface EndpointData {
-  name: string
-  method: string
-  endpoint: string
-  description: string
-  parameters: Parameter[]
+  name: string;
+  method: string;
+  endpoint: string;
+  description: string;
+  parameters: Parameter[];
   example: {
-    request: string
-    response: Record<string, unknown>
-  }
+    request: string;
+    response: Record<string, unknown>;
+  };
 }
 
 const endpointData: Record<string, EndpointData> = {
-  "gpt4-chat": {
-    name: "GPT-4 Chat",
-    method: "GET",
-    endpoint: "/v1/gpt4",
-    description: "Chat with GPT-4 AI model. Get intelligent responses powered by OpenAI's GPT-4.",
+  'gpt4-chat': {
+    name: 'GPT-4 Chat',
+    method: 'GET',
+    endpoint: '/v1/ai/gpt4',
+    description:
+      "Chat with GPT-4 AI model. Get intelligent responses powered by OpenAI's GPT-4.",
     parameters: [
       {
-        name: "prompt",
-        type: "string",
+        name: 'prompt',
+        type: 'string',
         required: true,
-        description: "Your message or question to GPT-4"
-      }
+        description: 'Your message or question to GPT-4',
+      },
     ],
     example: {
-      request: "https://api.zumlabs.tech/v1/gpt4?prompt=YOUR_PROMPT_HERE",
+      request: 'https://api.zumlabs.tech/v1/ai/gpt4?prompt=YOUR_PROMPT_HERE',
       response: {
-        attribution: "@GIMITA",
+        attribution: '@GIMITA',
         data: {
-          answer: "Hello! How can I assist you today?",
-          model: "gpt-4"
+          answer: 'Hello! How can I assist you today?',
+          model: 'gpt-4',
         },
         statusCode: 200,
         success: true,
-        timestamp: "2026-01-07T07:05:54.517Z"
-      }
-    }
+        timestamp: '2026-01-07T07:05:54.517Z',
+      },
+    },
   },
-  "tiktok-downloader": {
-    name: "TikTok Video Downloader",
-    method: "GET",
-    endpoint: "/v1/media/tiktok",
-    description: "Download TikTok videos without watermark. Get video details, statistics, and download links.",
+  'tiktok-downloader': {
+    name: 'TikTok Video Downloader',
+    method: 'GET',
+    endpoint: '/v1/downloader/tiktok',
+    description:
+      'Download TikTok videos without watermark. Get video details, statistics, and download links.',
     parameters: [
       {
-        name: "url",
-        type: "string",
+        name: 'url',
+        type: 'string',
         required: true,
-        description: "The TikTok video URL (e.g., https://www.tiktok.com/@user/video/1234567890)"
-      }
+        description:
+          'The TikTok video URL (e.g., https://www.tiktok.com/@user/video/1234567890)',
+      },
     ],
     example: {
-      request: "https://api.zumlabs.tech/v1/media/tiktok?url=https://www.tiktok.com/@user/video/1234567890",
+      request:
+        'https://api.zumlabs.tech/v1/downloader/tiktok?url=https://www.tiktok.com/@user/video/1234567890',
       response: {
         success: true,
         data: {
-          author: "username",
-          title: "Video title/description",
+          author: 'username',
+          title: 'Video title/description',
           duration: 15,
-          video_url: "https://example.com/video_with_watermark.mp4",
-          video_nowm: "https://example.com/video_without_watermark.mp4",
-          music_url: "https://example.com/music.mp3",
-          cover: "https://example.com/cover.jpg",
+          video_url: 'https://example.com/video_with_watermark.mp4',
+          video_nowm: 'https://example.com/video_without_watermark.mp4',
+          music_url: 'https://example.com/music.mp3',
+          cover: 'https://example.com/cover.jpg',
           statistics: {
             likes: 12345,
             comments: 678,
             shares: 234,
-            views: 567890
-          }
-        }
-      }
-    }
-  }
-}
+            views: 567890,
+          },
+        },
+      },
+    },
+  },
+};
 
 export function EndpointDetail({ endpointId }: EndpointDetailProps) {
-  const [testUrl, setTestUrl] = useState("")
-  const [testPrompt, setTestPrompt] = useState("")
-  const [testResponse, setTestResponse] = useState<Record<string, unknown> | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [codeTab, setCodeTab] = useState<'curl' | 'javascript'>('curl')
-  
-  const data = endpointData[endpointId]
-  
-  if (!data) return null
+  const [testUrl, setTestUrl] = useState('');
+  const [testPrompt, setTestPrompt] = useState('');
+  const [testResponse, setTestResponse] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [codeTab, setCodeTab] = useState<'curl' | 'javascript'>('curl');
+
+  const data = endpointData[endpointId];
+
+  if (!data) return null;
 
   const handleSendRequest = async () => {
-    if (endpointId === 'gpt4-chat' && !testPrompt) return
-    if (endpointId === 'tiktok-downloader' && !testUrl) return
-    
-    setIsLoading(true)
+    if (endpointId === 'gpt4-chat' && !testPrompt) return;
+    if (endpointId === 'tiktok-downloader' && !testUrl) return;
+
+    setIsLoading(true);
     try {
-      const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : ''
-      
+      const baseUrl =
+        process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : '';
+
       if (endpointId === 'gpt4-chat') {
-        const response = await fetch(`${baseUrl}/v1/gpt4?prompt=${encodeURIComponent(testPrompt)}`)
-        const result = await response.json()
-        setTestResponse(result)
+        const response = await fetch(
+          `${baseUrl}/v1/ai/gpt4?prompt=${encodeURIComponent(testPrompt)}`
+        );
+        const result = await response.json();
+        setTestResponse(result);
       } else if (endpointId === 'tiktok-downloader') {
-        const response = await fetch(`${baseUrl}/v1/media/tiktok?url=${encodeURIComponent(testUrl)}`)
-        const result = await response.json()
-        setTestResponse(result)
+        const response = await fetch(
+          `${baseUrl}/v1/downloader/tiktok?url=${encodeURIComponent(testUrl)}`
+        );
+        const result = await response.json();
+        setTestResponse(result);
       }
     } catch (error) {
-      setTestResponse({ 
-        success: false, 
-        message: 'Failed to fetch data: ' + (error instanceof Error ? error.message : 'Unknown error') 
-      })
+      setTestResponse({
+        success: false,
+        message:
+          'Failed to fetch data: ' +
+          (error instanceof Error ? error.message : 'Unknown error'),
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex-1 bg-[#0f1218] overflow-y-auto p-6 md:p-12">
@@ -147,7 +161,9 @@ export function EndpointDetail({ endpointId }: EndpointDetailProps) {
               {endpointId === 'gpt4-chat' ? 'AI' : 'DOWNLOADER'}
             </span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">{data.name}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+            {data.name}
+          </h1>
           <p className="text-gray-400">{data.description}</p>
         </div>
 
@@ -156,17 +172,19 @@ export function EndpointDetail({ endpointId }: EndpointDetailProps) {
           <h2 className="text-white font-semibold mb-4">Test Endpoint</h2>
           <div className="space-y-4">
             {/* Method & Endpoint Display */}
-            <div className="flex items-center gap-2 bg-[#0f1218] px-4 py-3 rounded-lg border border-[#2d3748]">
-              <span className={`px-2 py-1 text-white text-xs font-bold rounded ${
-                data.method === 'GET' ? 'bg-blue-500' : 'bg-green-500'
-              }`}>
+            <div className="flex items-start gap-2 bg-[#0f1218] px-4 py-3 rounded-lg border border-[#2d3748]">
+              <span
+                className={`px-2 py-1 text-white text-xs font-bold rounded shrink-0 ${
+                  data.method === 'GET' ? 'bg-blue-500' : 'bg-green-500'
+                }`}
+              >
                 {data.method}
               </span>
-              <code className="text-gray-300 text-sm font-mono">
+              <code className="text-gray-300 text-xs sm:text-sm font-mono break-all">
                 https://api.zumlabs.tech{data.endpoint}
               </code>
             </div>
-            
+
             {/* Input Field */}
             {endpointId === 'gpt4-chat' ? (
               <div>
@@ -195,14 +213,18 @@ export function EndpointDetail({ endpointId }: EndpointDetailProps) {
                 />
               </div>
             )}
-            
+
             {/* Send Request Button */}
             <button
               onClick={handleSendRequest}
-              disabled={(endpointId === 'gpt4-chat' && !testPrompt) || (endpointId === 'tiktok-downloader' && !testUrl) || isLoading}
+              disabled={
+                (endpointId === 'gpt4-chat' && !testPrompt) ||
+                (endpointId === 'tiktok-downloader' && !testUrl) ||
+                isLoading
+              }
               className={`w-full font-medium py-3 rounded-lg transition-colors ${
-                data.method === 'GET' 
-                  ? 'bg-blue-500 hover:bg-blue-600' 
+                data.method === 'GET'
+                  ? 'bg-blue-500 hover:bg-blue-600'
                   : 'bg-green-500 hover:bg-green-600'
               } disabled:bg-[#2d3748] disabled:cursor-not-allowed text-white`}
             >
@@ -256,17 +278,19 @@ export function EndpointDetail({ endpointId }: EndpointDetailProps) {
             <div className="relative">
               <button
                 onClick={() => {
-                  let code = ''
+                  let code = '';
                   if (endpointId === 'gpt4-chat') {
-                    code = codeTab === 'curl'
-                      ? `curl -X GET "https://api.zumlabs.tech/v1/gpt4?prompt=${encodeURIComponent(testPrompt || 'YOUR_PROMPT_HERE')}"`
-                      : `fetch('https://api.zumlabs.tech/v1/gpt4?prompt=${encodeURIComponent(testPrompt || 'YOUR_PROMPT_HERE')}')\n  .then(response => response.json())\n  .then(data => console.log(data));`
+                    code =
+                      codeTab === 'curl'
+                        ? `curl -X GET "https://api.zumlabs.tech/v1/ai/gpt4?prompt=${encodeURIComponent(testPrompt || 'YOUR_PROMPT_HERE')}"`
+                        : `fetch('https://api.zumlabs.tech/v1/ai/gpt4?prompt=${encodeURIComponent(testPrompt || 'YOUR_PROMPT_HERE')}')\n  .then(response => response.json())\n  .then(data => console.log(data));`;
                   } else {
-                    code = codeTab === 'curl'
-                      ? `curl -X GET "https://api.zumlabs.tech/v1/media/tiktok?url=${testUrl || 'YOUR_TIKTOK_URL'}"`
-                      : `fetch('https://api.zumlabs.tech/v1/media/tiktok?url=${testUrl || 'YOUR_TIKTOK_URL'}')\n  .then(response => response.json())\n  .then(data => console.log(data));`
+                    code =
+                      codeTab === 'curl'
+                        ? `curl -X GET "https://api.zumlabs.tech/v1/downloader/tiktok?url=${testUrl || 'YOUR_TIKTOK_URL'}"`
+                        : `fetch('https://api.zumlabs.tech/v1/downloader/tiktok?url=${testUrl || 'YOUR_TIKTOK_URL'}')\n  .then(response => response.json())\n  .then(data => console.log(data));`;
                   }
-                  navigator.clipboard.writeText(code)
+                  navigator.clipboard.writeText(code);
                 }}
                 className="absolute top-0 right-0 px-3 py-1.5 bg-[#2d3748] hover:bg-[#374151] text-gray-400 hover:text-white text-xs rounded transition-colors"
               >
@@ -275,17 +299,15 @@ export function EndpointDetail({ endpointId }: EndpointDetailProps) {
               <pre className="text-sm font-mono text-gray-300 pr-20 overflow-x-auto">
                 {codeTab === 'curl' ? (
                   <code>
-                    {endpointId === 'gpt4-chat' 
-                      ? `curl -X GET "https://api.zumlabs.tech/v1/gpt4?prompt=${encodeURIComponent(testPrompt || 'YOUR_PROMPT_HERE')}"`
-                      : `curl -X GET "https://api.zumlabs.tech/v1/media/tiktok?url=${testUrl || 'YOUR_TIKTOK_URL'}"`
-                    }
+                    {endpointId === 'gpt4-chat'
+                      ? `curl -X GET "https://api.zumlabs.tech/v1/ai/gpt4?prompt=${encodeURIComponent(testPrompt || 'YOUR_PROMPT_HERE')}"`
+                      : `curl -X GET "https://api.zumlabs.tech/v1/downloader/tiktok?url=${testUrl || 'YOUR_TIKTOK_URL'}"`}
                   </code>
                 ) : (
                   <code>
                     {endpointId === 'gpt4-chat'
-                      ? `fetch('https://api.zumlabs.tech/v1/gpt4?prompt=${encodeURIComponent(testPrompt || 'YOUR_PROMPT_HERE')}')\n  .then(response => response.json())\n  .then(data => console.log(data));`
-                      : `fetch('https://api.zumlabs.tech/v1/media/tiktok?url=${testUrl || 'YOUR_TIKTOK_URL'}')\n  .then(response => response.json())\n  .then(data => console.log(data));`
-                    }
+                      ? `fetch('https://api.zumlabs.tech/v1/ai/gpt4?prompt=${encodeURIComponent(testPrompt || 'YOUR_PROMPT_HERE')}')\n  .then(response => response.json())\n  .then(data => console.log(data));`
+                      : `fetch('https://api.zumlabs.tech/v1/downloader/tiktok?url=${testUrl || 'YOUR_TIKTOK_URL'}')\n  .then(response => response.json())\n  .then(data => console.log(data));`}
                   </code>
                 )}
               </pre>
@@ -294,5 +316,5 @@ export function EndpointDetail({ endpointId }: EndpointDetailProps) {
         </Card>
       </motion.div>
     </div>
-  )
+  );
 }

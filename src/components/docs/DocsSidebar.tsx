@@ -1,57 +1,67 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { ChevronDown, X } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState } from 'react';
+import { ChevronDown, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const apiCategories = [
   {
-    name: "AI",
+    name: 'AI',
     endpoints: [
       {
-        id: "gpt4-chat",
-        name: "GPT-4 Chat",
-        method: "GET"
-      }
-    ]
+        id: 'gpt4-chat',
+        name: 'GPT-4 Chat',
+        method: 'GET',
+      },
+    ],
   },
   {
-    name: "Media",
+    name: 'Downloader',
     endpoints: [
       {
-        id: "tiktok-downloader",
-        name: "TikTok Video Downloader",
-        method: "GET"
-      }
-    ]
-  }
-]
+        id: 'tiktok-downloader',
+        name: 'TikTok Video Downloader',
+        method: 'GET',
+      },
+    ],
+  },
+];
 
 interface DocsSidebarProps {
-  isOpen: boolean
-  onClose: () => void
-  onEndpointSelect: (endpointId: string) => void
-  selectedEndpoint?: string
+  isOpen: boolean;
+  onClose: () => void;
+  onEndpointSelect: (endpointId: string) => void;
+  selectedEndpoint?: string;
 }
 
-export function DocsSidebar({ isOpen, onClose, onEndpointSelect, selectedEndpoint }: DocsSidebarProps) {
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(["AI", "Media"])
-  const [filter, setFilter] = useState("")
+export function DocsSidebar({
+  isOpen,
+  onClose,
+  onEndpointSelect,
+  selectedEndpoint,
+}: DocsSidebarProps) {
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([
+    'AI',
+    'Downloader',
+  ]);
+  const [filter, setFilter] = useState('');
 
   const toggleCategory = (categoryName: string) => {
-    setExpandedCategories(prev => 
-      prev.includes(categoryName) 
-        ? prev.filter(c => c !== categoryName)
+    setExpandedCategories((prev) =>
+      prev.includes(categoryName)
+        ? prev.filter((c) => c !== categoryName)
         : [...prev, categoryName]
-    )
-  }
+    );
+  };
 
-  const filteredCategories = apiCategories.map(category => ({
-    ...category,
-    endpoints: category.endpoints.filter(endpoint => 
-      endpoint.name.toLowerCase().includes(filter.toLowerCase())
-    )
-  })).filter(category => category.endpoints.length > 0)
+  const filteredCategories = apiCategories
+    .map((category) => ({
+      ...category,
+      endpoints: category.endpoints.filter((endpoint) =>
+        endpoint.name.toLowerCase().includes(filter.toLowerCase())
+      ),
+    }))
+    .filter((category) => category.endpoints.length > 0);
 
   return (
     <>
@@ -78,7 +88,7 @@ export function DocsSidebar({ isOpen, onClose, onEndpointSelect, selectedEndpoin
               Endpoints
             </h2>
           </div>
-          <input 
+          <input
             type="text"
             placeholder="Type to filter..."
             value={filter}
@@ -95,13 +105,15 @@ export function DocsSidebar({ isOpen, onClose, onEndpointSelect, selectedEndpoin
                 className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#0f1218] rounded-lg transition-all group"
               >
                 <span className="text-[#16a34a]">{category.name}</span>
-                <ChevronDown 
+                <ChevronDown
                   className={`w-4 h-4 text-gray-400 group-hover:text-white transition-all ${
-                    expandedCategories.includes(category.name) ? 'rotate-180' : ''
+                    expandedCategories.includes(category.name)
+                      ? 'rotate-180'
+                      : ''
                   }`}
                 />
               </button>
-              
+
               {expandedCategories.includes(category.name) && (
                 <div className="mt-2 space-y-1 ml-2">
                   {category.endpoints.map((endpoint) => (
@@ -109,14 +121,18 @@ export function DocsSidebar({ isOpen, onClose, onEndpointSelect, selectedEndpoin
                       key={endpoint.id}
                       onClick={() => onEndpointSelect(endpoint.id)}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs hover:text-white hover:bg-[#0f1218] rounded-lg transition-all text-left group ${
-                        selectedEndpoint === endpoint.id ? 'bg-[#0f1218] text-white' : 'text-gray-400'
+                        selectedEndpoint === endpoint.id
+                          ? 'bg-[#0f1218] text-white'
+                          : 'text-gray-400'
                       }`}
                     >
-                      <span className={`px-2 py-1 text-[10px] font-bold rounded border transition-all ${
-                        selectedEndpoint === endpoint.id 
-                          ? 'bg-[#16a34a] text-white border-[#16a34a]' 
-                          : 'bg-[#16a34a]/20 text-[#16a34a] border-[#16a34a]/30 group-hover:bg-[#16a34a] group-hover:text-white'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 text-[10px] font-bold rounded border transition-all ${
+                          selectedEndpoint === endpoint.id
+                            ? 'bg-[#16a34a] text-white border-[#16a34a]'
+                            : 'bg-[#16a34a]/20 text-[#16a34a] border-[#16a34a]/30 group-hover:bg-[#16a34a] group-hover:text-white'
+                        }`}
+                      >
                         {endpoint.method}
                       </span>
                       <span className="truncate">{endpoint.name}</span>
@@ -133,7 +149,7 @@ export function DocsSidebar({ isOpen, onClose, onEndpointSelect, selectedEndpoin
       <motion.div
         initial={false}
         animate={{ x: isOpen ? 0 : -320 }}
-        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        transition={{ type: 'spring', damping: 30, stiffness: 300 }}
         className="lg:hidden fixed top-0 left-0 w-80 h-screen overflow-y-auto bg-[#0a0e14] border-r border-[#1a1f2e] z-50"
       >
         {/* Header */}
@@ -150,7 +166,7 @@ export function DocsSidebar({ isOpen, onClose, onEndpointSelect, selectedEndpoin
               <X className="w-5 h-5 text-gray-400" />
             </button>
           </div>
-          <input 
+          <input
             type="text"
             placeholder="Type to filter..."
             value={filter}
@@ -167,31 +183,37 @@ export function DocsSidebar({ isOpen, onClose, onEndpointSelect, selectedEndpoin
                 className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#0f1218] rounded-lg transition-all group"
               >
                 <span className="text-[#16a34a]">{category.name}</span>
-                <ChevronDown 
+                <ChevronDown
                   className={`w-4 h-4 text-gray-400 group-hover:text-white transition-all ${
-                    expandedCategories.includes(category.name) ? 'rotate-180' : ''
+                    expandedCategories.includes(category.name)
+                      ? 'rotate-180'
+                      : ''
                   }`}
                 />
               </button>
-              
+
               {expandedCategories.includes(category.name) && (
                 <div className="mt-2 space-y-1 ml-2">
                   {category.endpoints.map((endpoint) => (
                     <button
                       key={endpoint.id}
                       onClick={() => {
-                        onEndpointSelect(endpoint.id)
-                        onClose()
+                        onEndpointSelect(endpoint.id);
+                        onClose();
                       }}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs hover:text-white hover:bg-[#0f1218] rounded-lg transition-all text-left group ${
-                        selectedEndpoint === endpoint.id ? 'bg-[#0f1218] text-white' : 'text-gray-400'
+                        selectedEndpoint === endpoint.id
+                          ? 'bg-[#0f1218] text-white'
+                          : 'text-gray-400'
                       }`}
                     >
-                      <span className={`px-2 py-1 text-[10px] font-bold rounded border transition-all ${
-                        selectedEndpoint === endpoint.id 
-                          ? 'bg-[#16a34a] text-white border-[#16a34a]' 
-                          : 'bg-[#16a34a]/20 text-[#16a34a] border-[#16a34a]/30 group-hover:bg-[#16a34a] group-hover:text-white'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 text-[10px] font-bold rounded border transition-all ${
+                          selectedEndpoint === endpoint.id
+                            ? 'bg-[#16a34a] text-white border-[#16a34a]'
+                            : 'bg-[#16a34a]/20 text-[#16a34a] border-[#16a34a]/30 group-hover:bg-[#16a34a] group-hover:text-white'
+                        }`}
+                      >
                         {endpoint.method}
                       </span>
                       <span className="truncate">{endpoint.name}</span>
@@ -204,5 +226,5 @@ export function DocsSidebar({ isOpen, onClose, onEndpointSelect, selectedEndpoin
         </div>
       </motion.div>
     </>
-  )
+  );
 }
